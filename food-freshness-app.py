@@ -23,9 +23,9 @@ def preprocess_image(image: Image.Image):
 st.set_page_config(page_title="Freshness Detection", page_icon="🥗", layout="centered")
 
 st.title("🥗 Food Freshness Detection")
-st.write("Upload or capture a food image to check if it's **Fresh** or **Rotten**.")
+st.write("Upload gambar atau foto langsung dengan kamera untuk mengetahui makanan itu **Segar** atau **Busuk**.")
 
-tab1, tab2 = st.tabs(["📂 Upload Image", "📸 Use Camera"])
+tab1, tab2 = st.tabs(["📂 Upload Gambar", "📸 Pakai Kamera"])
 
 image = None
 
@@ -47,10 +47,10 @@ if image is not None:
 
     if prediction.shape[1] == 1:
         prob = prediction[0][0]
-        label = "Fresh" if prob < 0.5 else "Rotten"
-        confidence = prob if label == "Rotten" else 1 - prob
+        label = "Segar" if prob < 0.5 else "Busuk"
+        confidence = prob if label == "Busuk" else 1 - prob
     else:
-        classes = ["Fresh", "Rotten"]
+        classes = ["Segar", "Busuk"]
         idx = np.argmax(prediction[0])
         label = classes[idx]
         confidence = prediction[0][idx]
