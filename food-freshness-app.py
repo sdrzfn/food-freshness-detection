@@ -5,12 +5,7 @@ from PIL import Image
 
 
 # Load Model
-@st.cache_resource
-def load_model():
-    model = tf.keras.models.load_model("freshness_best_model.keras")
-    return model
-
-model = load_model()
+model = tf.keras.models.load_model("freshness_best_model.keras")
 
 
 # Preprocessing
