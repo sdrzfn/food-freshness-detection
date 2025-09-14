@@ -1,14 +1,19 @@
 import streamlit as st
-import tensorflow as tf
+# import tensorflow as tf
 import numpy as np
 from PIL import Image
 import gdown
+import os
 
 # Load Model
-url = "https://drive.google.com/uc?id=1J9KWogge6tfOCUBQJQg4CriobJOC32-y"
-output = "freshness_best_model.keras"
-gdown.download(url, output, quiet=False)
-model = tf.keras.models.load_model(output)
+file_id = "1J9KWogge6tfOCUBQJQg4CriobJOC32-y"
+path = "freshness_best_model.keras"
+
+def load_model():
+    if not os.path.exists("freshness_best_model.keras"):
+        url = f"https://drive.google.com/uc?id={file_id}"
+        gdown.download(url, path, quiet=False)
+    return load_model(path)
 
 
 # Preprocessing
@@ -46,7 +51,7 @@ with tab2:
 
 if image is not None:
     img_array = preprocess_image(image)
-    prediction = model.predict(img_array)
+    prediction = load_model.predict(img_array)
 
     if prediction.shape[1] == 1:
         prob = prediction[0][0]
