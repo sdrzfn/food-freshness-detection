@@ -2,12 +2,9 @@ import streamlit as st
 import tensorflow as tf
 import numpy as np
 from PIL import Image
-import gdown
 
 # Load Model
-url = "https://drive.google.com/uc?id=1J9KWogge6tfOCUBQJQg4CriobJOC32-y"
-output = "freshness_best_model.keras"
-gdown.download(url, output, quiet=False)
+output = "freshness_best_model.tflite"
 model = tf.keras.models.load_model(output)
 
 
