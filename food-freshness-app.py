@@ -2,6 +2,7 @@ import streamlit as st
 # import tensorflow as tf
 import numpy as np
 from PIL import Image
+<<<<<<< HEAD
 import gdown
 import os
 
@@ -14,6 +15,12 @@ def load_model():
         url = f"https://drive.google.com/uc?id={file_id}"
         gdown.download(url, path, quiet=False)
     return load_model(path)
+=======
+
+# Load Model
+output = "freshness_best_model.tflite"
+model = tf.keras.models.load_model(output)
+>>>>>>> 948c62dc8efc57970d74fe46126553ded6d7b824
 
 
 # Preprocessing
