@@ -26,7 +26,7 @@ def preprocess_image(image: Image.Image):
     img_array = np.expand_dims(img_array, axis=0)  # batch dimension
     return img_array
 
-
+model = load_model
 # Streamlit UI
 st.set_page_config(page_title="Freshness Detection", page_icon="🥗", layout="centered")
 
@@ -51,7 +51,6 @@ with tab2:
 
 if image is not None:
     img_array = preprocess_image(image)
-    model = load_model(path)
     prediction = model.predict(img_array)
 
     if prediction.shape[1] == 1:
