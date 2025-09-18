@@ -3,30 +3,32 @@ import numpy as np
 from PIL import Image
 import gdown
 import os
+from tensorflow.keras.models import load_model as keras_load_model
 
-# Load Model
-file_id = "1J9KWogge6tfOCUBQJQg4CriobJOC32-y"
-path = "freshness_best_model.keras"
-
-def load_model():
-    if not os.path.exists("freshness_best_model.keras"):
-        url = f"https://drive.google.com/uc?id={file_id}"
-        gdown.download(url, path, quiet=False)
-    return load_model(path)
-
-
-# Preprocessing
+# --- Konfigurasi ---
+FILE_ID = "1J9KWogge6tfOCUBQJQg4CriobJOC32-y"
+MODEL_PATH = "freshness_best_model.keras"
 IMG_SIZE = (224, 224)
 
+# --- Load Model ---
+@st.cache_resource
+def get_model():
+    if not os.path.exists(MODEL_PATH):
+        url = f"https://drive.google.com/uc?id={FILE_ID}"
+        gdown.download(url, MODEL_PATH, quiet=False)
+    return keras_load_model(MODEL_PATH)
+
+model = get_model()
+
+# --- Preprocessing ---
 def preprocess_image(image: Image.Image):
-    image = image.convert("RGB")  # ensure 3 channels
+    image = image.convert("RGB")  # pastikan 3 channel
     image = image.resize(IMG_SIZE)
-    img_array = np.array(image) / 255.0  # normalize
+    img_array = np.array(image) / 255.0  # normalisasi
     img_array = np.expand_dims(img_array, axis=0)  # batch dimension
     return img_array
 
-model = load_model
-# Streamlit UI
+# --- Streamlit UI ---
 st.set_page_config(page_title="Freshness Detection", page_icon="🥗", layout="centered")
 
 st.title("🥗 Food Freshness Detection")
@@ -48,15 +50,18 @@ with tab2:
         image = Image.open(camera_image)
         st.image(image, caption="Captured Image", use_column_width=True)
 
+# --- Prediction ---
 if image is not None:
     img_array = preprocess_image(image)
     prediction = model.predict(img_array)
 
     if prediction.shape[1] == 1:
+        # Binary classification (Sigmoid)
         prob = prediction[0][0]
         label = "Segar" if prob < 0.5 else "Busuk"
         confidence = prob if label == "Busuk" else 1 - prob
     else:
+        # Multi-class classification (Softmax)
         classes = ["Segar", "Busuk"]
         idx = np.argmax(prediction[0])
         label = classes[idx]
