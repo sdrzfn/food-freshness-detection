@@ -51,7 +51,8 @@ with tab2:
 
 if image is not None:
     img_array = preprocess_image(image)
-    prediction = load_model.predict(img_array)
+    model = load_model
+    prediction = model.predict(img_array)
 
     if prediction.shape[1] == 1:
         prob = prediction[0][0]
